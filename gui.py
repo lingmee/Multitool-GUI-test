@@ -4,6 +4,7 @@ from pathlib import Path
 from core.utils import read_file, write_file
 from core.cleaner_basic import strip_leading_numbers
 from core.cleaner_duplicates import remove_duplicate_and_empty_lines
+from core.cleaner_json import extract_json_prompts
 
 # kisuppuccin mocha colors
 COLORS = {
@@ -53,11 +54,11 @@ def style_label(label):
 
 
 #  shared GUI layout
-def create_clean_tab(tab, title, process_func):
+def create_clean_tab(tab, title, process_func, input_types=[("Text Files", "*.txt")]):
     def select_input_file():
         file_path = filedialog.askopenfilename(
-            title="Select a .txt file",
-            filetypes=[("Text Files", "*.txt")]
+            title="Select a file",
+            filetypes=input_types
         )
         if file_path:
             input_entry.delete(0, tk.END)
@@ -159,13 +160,21 @@ style.layout("TNotebook", [])  # This removes the border around tab content
 # create tabs
 tab_numbers = tk.Frame(notebook, bg=COLORS["base"])
 tab_duplicates = tk.Frame(notebook, bg=COLORS["base"])
+tab_json = tk.Frame(notebook, bg=COLORS["base"])
 notebook.add(tab_numbers, text="Strip Numbers")
 notebook.add(tab_duplicates, text="Remove Duplicates")
+notebook.add(tab_json, text="Extract JSON Prompts")
 
 create_clean_tab(tab_numbers, "Strip Numbers", strip_leading_numbers)
 create_clean_tab(tab_duplicates, "Remove Duplicates", remove_duplicate_and_empty_lines)
+create_clean_tab(
+    tab_json,
+    "Extract JSON Prompts",
+    extract_json_prompts,
+    input_types=[("JSON Files", "*.json"), ("All Files", "*.*")]
+)
 
-footer = tk.Label(root, text="Truth is, the game was rigged from the start.", fg=COLORS["overlay1"],
+footer = tk.Label(root, text="Drinking alone is like shitting with company.", fg=COLORS["overlay1"],
                   bg=COLORS["base"], font=("Segoe UI", 8))
 footer.pack(side="bottom", pady=4)
 
