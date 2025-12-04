@@ -6,6 +6,7 @@ dist/
 wheels/
 *.egg-info
 gui.spec
+usefull-commands.txt
 
 # Virtual environments
 .venv
